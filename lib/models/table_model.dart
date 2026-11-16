@@ -12,7 +12,7 @@ class TableModel {
     required this.id,
     required this.number,
     required this.name,
-    required this.capacity,
+    this.capacity = 6, // Kapasitas 6 orang satu meja
     required this.isAvailable,
     this.area = 'Main Hall',
     this.gridX = 0,
@@ -41,80 +41,64 @@ class TableModel {
     );
   }
 
-  // Pre-configured 8 tables matching mockup
+  /// 7 Meja ALVARAN, masing-masing berkapasitas 6 orang
   static List<TableModel> initialTables() {
     return const [
       TableModel(
         id: 1,
         number: 1,
         name: 'Meja 1',
-        capacity: 4,
+        capacity: 6,
         isAvailable: true,
-        gridX: 0.28,
-        gridY: 0.16,
+        area: 'Main Hall A',
       ),
       TableModel(
         id: 2,
         number: 2,
         name: 'Meja 2',
-        capacity: 4,
-        isAvailable: false, // Terisi in mockup
-        gridX: 0.72,
-        gridY: 0.16,
+        capacity: 6,
+        isAvailable: false, // Terisi
+        area: 'Main Hall A',
       ),
       TableModel(
         id: 3,
         number: 3,
         name: 'Meja 3',
-        capacity: 4,
+        capacity: 6,
         isAvailable: true,
-        gridX: 0.28,
-        gridY: 0.38,
+        area: 'Main Hall B',
       ),
       TableModel(
         id: 4,
         number: 4,
         name: 'Meja 4',
-        capacity: 4,
+        capacity: 6,
         isAvailable: true,
-        gridX: 0.72,
-        gridY: 0.38,
+        area: 'Main Hall B',
       ),
       TableModel(
         id: 5,
         number: 5,
         name: 'Meja 5',
-        capacity: 4,
+        capacity: 6,
         isAvailable: true,
-        gridX: 0.28,
-        gridY: 0.60,
+        area: 'Cozy Corner',
       ),
       TableModel(
         id: 6,
         number: 6,
         name: 'Meja 6',
-        capacity: 4,
+        capacity: 6,
         isAvailable: true,
-        gridX: 0.72,
-        gridY: 0.60,
+        area: 'Cozy Corner',
       ),
       TableModel(
         id: 7,
         number: 7,
         name: 'Meja 7',
-        capacity: 4,
+        capacity: 6,
         isAvailable: true,
-        gridX: 0.28,
-        gridY: 0.82,
-      ),
-      TableModel(
-        id: 8,
-        number: 8,
-        name: 'Meja 8',
-        capacity: 4,
-        isAvailable: true,
-        gridX: 0.72,
-        gridY: 0.82,
+        area: 'Grand Table Center',
       ),
     ];
   }

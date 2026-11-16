@@ -386,7 +386,7 @@ class _BuyTicketsScreenState extends State<BuyTicketsScreen> {
                                 child: Text(
                                   booking.selectedTable != null
                                       ? '${booking.selectedTable!.name} (Kapasitas: ${booking.selectedTable!.capacity} orang)'
-                                      : 'Meja 1-8',
+                                      : 'Meja 1-7',
                                   style: AppTypography.titleSmall.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 14,

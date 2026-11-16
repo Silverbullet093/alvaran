@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/table_model.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_typography.dart';
 
 class TableFloorCanvas extends StatelessWidget {
   final List<TableModel> tables;
@@ -37,23 +36,36 @@ class TableFloorCanvas extends StatelessWidget {
           children: [
             // Background wood parquet lines & potted corner plants
             CustomPaint(
-              size: const Size(double.infinity, 380),
+              size: const Size(double.infinity, 420),
               painter: _FloorDetailsPainter(),
             ),
 
-            // 8 Tables Grid
+            // 7 Tables Layout (Masing-masing 6 Kursi)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildTableRow(tables[0], tables[1]),
-                  const SizedBox(height: 18),
-                  _buildTableRow(tables[2], tables[3]),
-                  const SizedBox(height: 18),
-                  _buildTableRow(tables[4], tables[5]),
-                  const SizedBox(height: 18),
-                  _buildTableRow(tables[6], tables[7]),
+                  if (tables.length >= 2) ...[
+                    _buildTableRow(tables[0], tables[1]),
+                    const SizedBox(height: 18),
+                  ],
+                  if (tables.length >= 4) ...[
+                    _buildTableRow(tables[2], tables[3]),
+                    const SizedBox(height: 18),
+                  ],
+                  if (tables.length >= 6) ...[
+                    _buildTableRow(tables[4], tables[5]),
+                    const SizedBox(height: 18),
+                  ],
+                  if (tables.length >= 7) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildTableWidget(tables[6]),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -103,21 +115,23 @@ class TableFloorCanvas extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Top 2 chairs
+          // Top 3 chairs (Kapasitas 6 orang: 3 atas + 3 bawah)
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildChair(chairColor),
-              const SizedBox(width: 14),
+              const SizedBox(width: 8),
+              _buildChair(chairColor),
+              const SizedBox(width: 8),
               _buildChair(chairColor),
             ],
           ),
           const SizedBox(height: 3),
 
-          // Main Tabletop
+          // Main Tabletop (6 orang, ukuran lebih proporsional)
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: 78,
+            width: 88,
             height: 48,
             decoration: BoxDecoration(
               color: tableColor,
@@ -136,35 +150,48 @@ class TableFloorCanvas extends StatelessWidget {
                 ),
               ],
             ),
-            child: Center(
-              child: Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    table.number.toString(),
-                    style: TextStyle(
-                      color: textColor,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 13,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Table Number Badge
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.22),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      table.number.toString(),
+                      style: TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 6),
+                // 6-seat indicator icon
+                Icon(
+                  Icons.group_rounded,
+                  size: 14,
+                  color: textColor.withValues(alpha: 0.85),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 3),
 
-          // Bottom 2 chairs
+          // Bottom 3 chairs
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildChair(chairColor),
-              const SizedBox(width: 14),
+              const SizedBox(width: 8),
+              _buildChair(chairColor),
+              const SizedBox(width: 8),
               _buildChair(chairColor),
             ],
           ),
@@ -214,17 +241,17 @@ class _FloorDetailsPainter extends CustomPainter {
   }
 
   void _drawPlant(Canvas canvas, Offset center) {
-    // Pot
     final potPaint = Paint()..color = const Color(0xFFC76B42);
     canvas.drawCircle(center, 9, potPaint);
 
-    // Leaves
     final leafPaint = Paint()..color = const Color(0xFF2C6B4F);
     for (int i = 0; i < 5; i++) {
-      final angle = (i * 72) * 3.14159 / 180;
-      final lx = center.dx + 8 * (angle.abs() > 0 ? 1 : 0);
-      final ly = center.dy + 8 * (angle.abs() > 0 ? 1 : 0);
-      canvas.drawCircle(Offset(center.dx + 5 * (i % 2 == 0 ? 1 : -1), center.dy + 5 * (i > 2 ? 1 : -1)), 4, leafPaint);
+      canvas.drawCircle(
+        Offset(center.dx + 5 * (i % 2 == 0 ? 1 : -1),
+            center.dy + 5 * (i > 2 ? 1 : -1)),
+        4,
+        leafPaint,
+      );
     }
   }
 
