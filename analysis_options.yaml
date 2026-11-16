@@ -1,0 +1,17 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    deprecated_member_use: ignore
+    unused_local_variable: ignore
+    unused_import: ignore
+    use_null_aware_elements: ignore
+  exclude:
+    - build/**
+    - android/**
+    - web/**
+    - windows/**
+
+linter:
+  rules:
+    avoid_print: false
