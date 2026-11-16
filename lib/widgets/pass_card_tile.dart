@@ -7,18 +7,21 @@ import '../utils/currency_formatter.dart';
 class PassCardTile extends StatelessWidget {
   final PassType pass;
   final bool isSelected;
+  final bool isWeekend;
   final VoidCallback onSelect;
 
   const PassCardTile({
     super.key,
     required this.pass,
     required this.isSelected,
+    this.isWeekend = false,
     required this.onSelect,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isRegular = pass.id == 'regular';
+    final isHourly = pass.isHourly;
+    final activePrice = pass.getPrice(isWeekend);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -50,19 +53,21 @@ class PassCardTile extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Pass Icon Badge
+                // Pass Icon Badge (Sun for All Day, Clock for Hourly)
                 Container(
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: isRegular ? AppColors.softLavender : const Color(0xFFF3EEDF),
+                    color: isHourly
+                        ? const Color(0xFFD6F0EA) // Soft mint for clock
+                        : const Color(0xFFFDF0D5), // Soft gold for sun
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
                     child: Icon(
-                      isRegular ? Icons.confirmation_number_rounded : Icons.workspace_premium_rounded,
-                      color: isRegular ? const Color(0xFF5D517A) : AppColors.gold,
-                      size: 22,
+                      isHourly ? Icons.access_time_filled_rounded : Icons.wb_sunny_rounded,
+                      color: isHourly ? const Color(0xFF1E6C57) : const Color(0xFFB87814),
+                      size: 24,
                     ),
                   ),
                 ),
@@ -73,13 +78,39 @@ class PassCardTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        pass.name,
-                        style: AppTypography.titleMedium.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15,
-                          color: AppColors.textPrimary,
-                        ),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              pass.name,
+                              style: AppTypography.titleMedium.copyWith(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: isWeekend
+                                  ? AppColors.occupiedRedLight
+                                  : AppColors.availableGreenLight,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              isWeekend ? 'Weekend' : 'Weekday',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: isWeekend
+                                    ? AppColors.terracotta
+                                    : AppColors.availableGreen,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 2),
                       Text(
@@ -90,13 +121,25 @@ class PassCardTile extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        CurrencyFormatter.format(pass.price),
-                        style: AppTypography.titleMedium.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14,
-                          color: AppColors.textPrimary,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            CurrencyFormatter.format(activePrice),
+                            style: AppTypography.titleMedium.copyWith(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          Text(
+                            isHourly ? ' / jam / orang' : ' / All Day / orang',
+                            style: AppTypography.bodySmall.copyWith(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
